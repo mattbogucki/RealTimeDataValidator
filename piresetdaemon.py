@@ -1,10 +1,10 @@
-import PIconnect
-import openpyxl
 import argparse
+import os
 import socket
 import sys
-import os
-import logging
+
+import PIconnect
+import openpyxl
 
 
 def main():
@@ -173,7 +173,6 @@ class PointsMaster(object):
         excel_file_output.create_sheet("Max Violations")
         excel_file_output.create_sheet("Update Freq Violations")
         excel_file_output.create_sheet("Granularity Violations")
-        excel_file_output.remove("Sheet")
 
         min_violations_ws = excel_file_output["Min Violations"]
         min_violations_ws.cell(row=1, column=1).value = "Point Name"
