@@ -1,0 +1,1 @@
+ C:\Python3810\python.exe C:\Python3810\scripts\pyinstaller.exe --onefile .\piresetdaemon.py
