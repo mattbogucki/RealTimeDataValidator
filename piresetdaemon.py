@@ -28,8 +28,7 @@ def main():
 
     desktop_logfile = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop\point_rt_validation_log.txt')
     pm = PointsMaster(cmd_line_args.FILENAME, cmd_line_args.TAB, desktop_logfile)
-    logger = PiLogger(desktop_logfile)
-    pm.validate_rt_pi_data(logger)
+    pm.validate_rt_pi_data()
 
 
 def get_pi_server_name() -> str:
@@ -42,30 +41,6 @@ def get_pi_server_name() -> str:
         return socket.gethostname()
     except:
         return socket.gethostname()
-
-
-class PiLogger(object):
-
-    def __init__(self, log_file_path: str):
-        self.logger = logging.getLogger(log_file_path)
-        format = logging.Formatter('%(message)s')
-        self.logger.setLevel(logging.DEBUG)
-
-        console = logging.StreamHandler()
-        console.setLevel(logging.DEBUG)
-        console.setFormatter(format)
-        self.logger.addHandler(console)
-
-        output_file_handler = logging.FileHandler(log_file_path)
-        output_file_handler.setLevel(logging.DEBUG)
-        output_file_handler.setFormatter(format)
-        self.logger.addHandler(output_file_handler)
-
-    def log_error(self, message):
-        self.logger.error(message)
-
-    def log_info(self, message):
-        self.logger.info(message)
 
 
 class PointsMaster(object):
@@ -126,7 +101,7 @@ class PointsMaster(object):
         print("A11 Point Count: {}".format(len(point_metadatata_dict)))
         return point_metadatata_dict
 
-    def validate_rt_pi_data(self, logger):
+    def validate_rt_pi_data(self):
         point_metadata_dict = self.generate_dictionary_of_points_from_attachment3()
         pi_server = get_pi_server_name()
         print(pi_server)
