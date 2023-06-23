@@ -15,7 +15,7 @@ BIG_NUMBER = 99999999999999
 def main():
     parser = argparse.ArgumentParser(description='Points List Validator')
     parser.add_argument('FILENAME', action="store", help=".xlsx filename of points list")
-    parser.add_argument('TAB', action="store", help='Name of tab with owners points list (Default is DNP3.0 Points List)')
+    parser.add_argument('TAB', action="store", help='Name of tab with owners points list (Default: DNP3.0 Points List)')
     parser.add_argument('-d', action="store_true", dest="debug", default=False)
 
     try:
@@ -111,10 +111,13 @@ class PointsMaster(object):
                         egu_min = float(egu_min_string)
                         egu_max = float(egu_max_string)
                     except:
-                        #print("ERROR: Row {} - Invalid Engineering Units Min:{} Max:{}, Must be numeric".format(i + 1, egu_min_string, egu_max_string))
+                        print("ERROR: Row {} - Invalid Engineering Units Min:{} Max:{}".format(i + 1,
+                                                                                               egu_min_string,
+                                                                                               egu_max_string))
                         continue
 
                     point_metadatata_dict[point_name] = (device_type, source_device, egu_max, egu_min)
+
         print("A11 Point Count: {}".format(len(point_metadatata_dict)))
         return point_metadatata_dict
 
@@ -140,7 +143,7 @@ class PointsMaster(object):
                     this_point = server.search(str(point))[0]
                     data = this_point.recorded_values('*-24h', '*')
                 except Exception as e:
-                    #print("ERROR: Could not find {} on the PI server".format(point))
+                    # print("ERROR: Could not find {} on the PI server".format(point))
                     continue
 
                 points_audited += 1
@@ -148,7 +151,10 @@ class PointsMaster(object):
                 max_recorded_value = max(data)
                 min_recorded_value = min(data)
 
-                print("{} Count:{} Min:{} Max:{}".format(point, recorded_values_count, min_recorded_value, max_recorded_value))
+                print("{} Count:{} Min:{} Max:{}".format(point,
+                                                         recorded_values_count,
+                                                         min_recorded_value,
+                                                         max_recorded_value))
 
                 # Check to ensure all data falls within min/max from attachment 3
                 if max_recorded_value > egu_max:
@@ -164,10 +170,10 @@ class PointsMaster(object):
 
                 # Should record deltas at a minimum of 0.1
                 for i in range(recorded_values_count):
-                    if i == recorded_values_count-1:
+                    if i == recorded_values_count - 1:
                         break
                     previous_value = data[i]
-                    current_value = data[i+1]
+                    current_value = data[i + 1]
 
                     delta = abs(current_value - previous_value)
                     if delta < smallest_delta and delta != 0:  # 0 doesnt count
